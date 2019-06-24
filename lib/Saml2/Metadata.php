@@ -65,7 +65,7 @@ SP_EXTENSIONS;
                             {$sp['UIinfo']['Description']}
                         </mdui:Description>
                         <mdui:PrivacyStatementURL xml:lang="en">{$sp['UIinfo']['PrivacyStatementURL']}</mdui:PrivacyStatementURL>
-                        <mdui:Logo width="{$sp['UIinfo']['logoWidth']}" height="{$sp['UIinfo']['logoWidth']}">{$sp['UIinfo']['logoAsset']}</mdui:Logo>
+                        <mdui:Logo width="{$sp['UIinfo']['logoWidth']}" height="{$sp['UIinfo']['logoHeight']}">{$sp['UIinfo']['logoAsset']}</mdui:Logo>
                     </mdui:UIInfo>
 UI_INFO;
         }
