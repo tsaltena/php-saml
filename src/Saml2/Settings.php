@@ -845,7 +845,8 @@ class Settings
             $metadata = Metadata::addX509KeyDescriptors(
                 $metadata,
                 $certNew,
-                $alwaysPublishEncryptionCert || $this->_security['wantNameIdEncrypted'] || $this->_security['wantAssertionsEncrypted']
+                $alwaysPublishEncryptionCert || $this->_security['wantNameIdEncrypted'] || $this->_security['wantAssertionsEncrypted'],
+                $this->_sp['UIinfo']
             );
         }
 

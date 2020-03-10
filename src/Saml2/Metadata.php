@@ -65,7 +65,29 @@ class Metadata
 
 SLS_TEMPLATE;
         }
+        $SPextensions = <<<SP_EXTENSIONS
+                <md:Extensions>
+                    <mdattr:EntityAttributes>
+                        <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                            <saml:AttributeValue>http://www.geant.net/uri/dataprotection-code-of-conduct/v1</saml:AttributeValue>
+                        </saml:Attribute>
+                        </mdattr:EntityAttributes>
+                </md:Extensions>
+SP_EXTENSIONS;
 
+        $UInfo = '';
+        if($sp['UIinfo'] !== '') {
+            $UInfo = <<<UI_INFO
+                    <mdui:UIInfo>
+                        <mdui:DisplayName xml:lang="en">{$sp['UIinfo']['DisplayName']}</mdui:DisplayName>
+                        <mdui:Description xml:lang="en">
+                            {$sp['UIinfo']['Description']}
+                        </mdui:Description>
+                        <mdui:PrivacyStatementURL xml:lang="en">{$sp['UIinfo']['PrivacyStatementURL']}</mdui:PrivacyStatementURL>
+                        <mdui:Logo width="{$sp['UIinfo']['logoWidth']}" height="{$sp['UIinfo']['logoWidth']}">{$sp['UIinfo']['logoAsset']}</mdui:Logo>
+                    </mdui:UIInfo>
+UI_INFO;
+        }
         if ($authnsign) {
             $strAuthnsign = 'true';
         } else {
@@ -174,18 +196,29 @@ METADATA_TEMPLATE;
         $acsUrl = htmlspecialchars($sp['assertionConsumerService']['url'], ENT_QUOTES);
         $metadata = <<<METADATA_TEMPLATE
 <?xml version="1.0"?>
-<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" 
+                     xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi"
+                     xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute"
+                     xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
+                     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
                      validUntil="{$validUntilTime}"
                      cacheDuration="PT{$cacheDuration}S"
                      entityID="{$spEntityId}">
+     {$SPextensions}
     <md:SPSSODescriptor AuthnRequestsSigned="{$strAuthnsign}" WantAssertionsSigned="{$strWsign}" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-{$sls}        <md:NameIDFormat>{$sp['NameIDFormat']}</md:NameIDFormat>
+        <md:Extensions>
+            {$UInfo}
+        </md:Extensions>        
+        {$sls}
+        <md:NameIDFormat>{$sp['NameIDFormat']}</md:NameIDFormat>
         <md:AssertionConsumerService Binding="{$sp['assertionConsumerService']['binding']}"
                                      Location="{$acsUrl}"
                                      index="1" />
         {$strAttributeConsumingService}
-    </md:SPSSODescriptor>{$strOrganization}{$strContacts}
-</md:EntityDescriptor>
+    </md:SPSSODescriptor>
+    {$strOrganization}
+    {$strContacts}
+    </md:EntityDescriptor>
 METADATA_TEMPLATE;
         return $metadata;
     }
@@ -220,7 +253,7 @@ METADATA_TEMPLATE;
      *
      * @throws Exception
      */
-    public static function addX509KeyDescriptors($metadata, $cert, $wantsEncrypted = true)
+    public static function addX509KeyDescriptors($metadata, $cert, $wantsEncrypted = true, $sp_extensions = null)
     {
         $xml = new DOMDocument();
         $xml->preserveWhiteSpace = false;
@@ -246,9 +279,9 @@ METADATA_TEMPLATE;
         $keyDescriptor = $xml->createElementNS(Constants::NS_MD, "md:KeyDescriptor");
 
         $SPSSODescriptor = $xml->getElementsByTagName('SPSSODescriptor')->item(0);
-        $SPSSODescriptor->insertBefore($keyDescriptor->cloneNode(), $SPSSODescriptor->firstChild);
+        $SPSSODescriptor->insertBefore($keyDescriptor->cloneNode(), $SPSSODescriptor->firstChild->nextSibling);
         if ($wantsEncrypted === true) {
-            $SPSSODescriptor->insertBefore($keyDescriptor->cloneNode(), $SPSSODescriptor->firstChild);
+            $SPSSODescriptor->insertBefore($keyDescriptor->cloneNode(), $SPSSODescriptor->firstChild->nextSibling);
         }
 
         $signing = $xml->getElementsByTagName('KeyDescriptor')->item(0);
