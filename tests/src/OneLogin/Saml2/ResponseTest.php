@@ -1011,6 +1011,10 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
     */
     public function testIsInValidDestination()
     {
+        $_SERVER['HTTP_HOST'] = 'stuff.com';
+        $_SERVER['HTTPS'] = 'https';
+        $_SERVER['REQUEST_URI'] = '/endpoints/endpoints/acs.php';
+
         $xml = file_get_contents(TEST_ROOT . '/data/responses/unsigned_response.xml.base64');
 
         $response = new OneLogin_Saml2_Response($this->_settings, $xml);
@@ -1031,10 +1035,28 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('The response has an empty Destination value', $response3->getError());
 
         include TEST_ROOT .'/settings/settings1.php';
+        $settingsInfo['strict'] = true;
         $settingsInfo['security']['relaxDestinationValidation'] = true;
         $settings = new OneLogin_Saml2_Settings($settingsInfo);
         $response4 = new OneLogin_Saml2_Response($settings, $xml2);
         $this->assertTrue($response4->isValid());
+
+        // Destination strict match 
+        $xml3 = file_get_contents(TEST_ROOT . '/data/responses/invalids/invalid_strict_destination.xml.base64');
+        $response5 = new OneLogin_Saml2_Response($settings, $xml3);
+        $this->assertTrue($response5->isValid());
+
+        $settingsInfo['security']['destinationStrictlyMatches'] = true;
+        $settings2 = new OneLogin_Saml2_Settings($settingsInfo);
+        $response6 = new OneLogin_Saml2_Response($settings2, $xml3);
+        $this->assertFalse($response6->isValid());
+        $this->assertContains('The response was received at', $response6->getError());
+
+        unset($settingsInfo['strict']);
+        unset($settingsInfo['security']['destinationStrictlyMatches']);
+        unset($_SERVER['HTTP_HOST']);
+        unset($_SERVER['HTTPS']);
+        unset($_SERVER['REQUEST_URI']);
     }
 
     /**
@@ -1280,6 +1302,69 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
         $this->assertContains('No Signature found. SAML Response rejected', $response2->getError());
     }
 
+    /**
+    * Tests the isValid method of the OneLogin_Saml2_Response class
+    * Case Invalid Response, Unexpected InResponseTo
+    *
+    * @covers OneLogin_Saml2_Response::isValid
+    */
+    public function testIsInValidUnexpectedInResponseTo()
+    {
+        $xml = file_get_contents(TEST_ROOT . '/data/responses/unsigned_response.xml.base64');
+
+        $plainMessage = base64_decode($xml);
+        $currentURL = OneLogin_Saml2_Utils::getSelfURLNoQuery();
+        $plainMessage = str_replace('http://stuff.com/endpoints/endpoints/acs.php', $currentURL, $plainMessage);
+        $message = base64_encode($plainMessage);
+
+        $settingsDir = TEST_ROOT .'/settings/';
+        include $settingsDir.'settings1.php';
+        $settingsInfo['security']['rejectUnsolicitedResponsesWithInResponseTo'] = true;
+        $settingsInfo['strict'] = true;
+        $settings = new OneLogin_Saml2_Settings($settingsInfo);
+
+        $response = new OneLogin_Saml2_Response($settings, $message);
+
+        $inResponseTo = "_57bcbf70-7b1f-012e-c821-782bcb13bb38";
+
+        $response->isValid();
+        $this->assertEquals('The Response has an InResponseTo attribute: '.$inResponseTo.' while no InResponseTo was expected', $response->getError());
+
+        $response->isValid($inResponseTo);
+        $this->assertContains('No Signature found. SAML Response rejected', $response->getError());
+    }
+
+    /**
+    * Tests the isValid method of the OneLogin_Saml2_Response class
+    * Case Invalid Response, No InResponseTo
+    *
+    * @covers OneLogin_Saml2_Response::isValid
+    */
+    public function testIsInValidNoInResponseTo()
+    {
+        $xml = file_get_contents(TEST_ROOT . '/data/responses/invalids/invalid_unpaired_inresponsesto.xml.base64');
+
+        $plainMessage = base64_decode($xml);
+        $currentURL = OneLogin_Saml2_Utils::getSelfURLNoQuery();
+        $plainMessage = str_replace('http://stuff.com/endpoints/endpoints/acs.php', $currentURL, $plainMessage);
+        $message = base64_encode($plainMessage);
+
+        $settingsDir = TEST_ROOT .'/settings/';
+        include $settingsDir.'settings1.php';
+        $settingsInfo['security']['rejectUnsolicitedResponsesWithInResponseTo'] = true;
+        $settingsInfo['strict'] = true;
+        $settings = new OneLogin_Saml2_Settings($settingsInfo);
+
+        $response = new OneLogin_Saml2_Response($settings, $message);
+
+        $inResponseTo = "_57bcbf70-7b1f-012e-c821-782bcb13bb38";
+
+        $response->isValid();
+        $this->assertContains('No Signature found. SAML Response rejected', $response->getError());
+        
+        $response->isValid($inResponseTo);
+        $this->assertEquals('No InResponseTo at the Response, but it was provided the requestId related to the AuthNRequest sent by the SP: '.$inResponseTo, $response->getError());
+    }
 
     /**
     * Tests the isValid method of the OneLogin_Saml2_Response class
