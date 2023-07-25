@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Utils of OneLogin PHP Toolkit
+ * Utils of PHP Toolkit
  *
  * Defines several often used methods
  */
@@ -494,7 +494,9 @@ class OneLogin_Saml2_Utils
         if (self::$_host) {
             $currentHost = self::$_host;
         } elseif (self::getProxyVars() && array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER)) {
-            $currentHost = $_SERVER['HTTP_X_FORWARDED_HOST'];
+            $currentHost = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+            $values = array_values($currentHost);
+            $currentHost = array_shift($values);
         } elseif (array_key_exists('HTTP_HOST', $_SERVER)) {
             $currentHost = $_SERVER['HTTP_HOST'];
         } elseif (array_key_exists('SERVER_NAME', $_SERVER)) {
@@ -648,7 +650,7 @@ class OneLogin_Saml2_Utils
 
         $pos = strpos($selfRoutedURLNoQuery, "?");
         if ($pos !== false) {
-            $selfRoutedURLNoQuery = substr($selfRoutedURLNoQuery, 0, $pos-1);
+            $selfRoutedURLNoQuery = substr($selfRoutedURLNoQuery, 0, $pos);
         }
 
         return $selfRoutedURLNoQuery;
@@ -1391,7 +1393,7 @@ class OneLogin_Saml2_Utils
      * Validates a signature (Message or Assertion).
      *
      * @param string|DomNode $xml            The element we should validate
-     * @param string|null    $cert           The pubic cert
+     * @param string|null    $cert           The public cert
      * @param string|null    $fingerprint    The fingerprint of the public cert
      * @param string|null    $fingerprintalg The algorithm used to get the fingerprint
      * @param string|null    $xpath          The xpath of the signed element
@@ -1546,7 +1548,7 @@ class OneLogin_Saml2_Utils
                     $objKey = OneLogin_Saml2_Utils::castKey($objKey, $signAlg, 'public');
                 } catch (Exception $e) {
                     $ex = new OneLogin_Saml2_ValidationError(
-                        "Invalid signAlg in the recieved ".$strMessageType,
+                        "Invalid signAlg in the received ".$strMessageType,
                         OneLogin_Saml2_ValidationError::INVALID_SIGNATURE
                     );
                     if (count($multiCerts) == 1) {

@@ -624,7 +624,7 @@ class OneLogin_Saml2_Response
                         $spEntityId = $spData['entityId'];
                         if ($spEntityId != $nameId->getAttribute($attr)) {
                             throw new OneLogin_Saml2_ValidationError(
-                                "The SPNameQualifier value mistmatch the SP entityID value.",
+                                "The SPNameQualifier value mismatch the SP entityID value.",
                                 OneLogin_Saml2_ValidationError::SP_NAME_QUALIFIER_NAME_MISMATCH
                             );
                         }
@@ -779,6 +779,9 @@ class OneLogin_Saml2_Response
 
         $entries = $this->_queryAssertion('/saml:AttributeStatement/saml:Attribute');
 
+        $security = $this->_settings->getSecurityData();
+        $allowRepeatAttributeName = $security['allowRepeatAttributeName'];
+
         /** @var $entry DOMNode */
         foreach ($entries as $entry) {
             $attributeKeyNode = $entry->attributes->getNamedItem($keyName);
@@ -789,11 +792,13 @@ class OneLogin_Saml2_Response
 
             $attributeKeyName = $attributeKeyNode->nodeValue;
 
-            if (in_array($attributeKeyName, array_keys($attributes))) {
-                throw new OneLogin_Saml2_ValidationError(
-                    "Found an Attribute element with duplicated ".$keyName,
-                    OneLogin_Saml2_ValidationError::DUPLICATED_ATTRIBUTE_NAME_FOUND
-                );
+            if (in_array($attributeKeyName, array_keys($attributes), true)) {
+                if (!$allowRepeatAttributeName) {
+                    throw new OneLogin_Saml2_ValidationError(
+                        "Found an Attribute element with duplicated ".$keyName,
+                        OneLogin_Saml2_ValidationError::DUPLICATED_ATTRIBUTE_NAME_FOUND
+                    );
+                }
             }
 
             $attributeValues = array();
@@ -804,7 +809,11 @@ class OneLogin_Saml2_Response
                 }
             }
 
-            $attributes[$attributeKeyName] = $attributeValues;
+            if (in_array($attributeKeyName, array_keys($attributes), true)) {
+                $attributes[$attributeKeyName] = array_merge($attributes[$attributeKeyName], $attributeValues);
+            } else {
+                $attributes[$attributeKeyName] = $attributeValues;
+            }
         }
         return $attributes;
     }

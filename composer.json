@@ -1,6 +1,6 @@
 {
     "name": "onelogin/php-saml",
-    "description": "OneLogin PHP SAML Toolkit",
+    "description": "PHP SAML Toolkit",
     "license": "MIT",
     "homepage": "https://developers.onelogin.com/saml/php",
     "keywords": ["saml", "saml2", "onelogin"],
@@ -21,10 +21,11 @@
         "ext-curl": "*",
         "ext-openssl": "*",
         "ext-dom": "*",
-        "ext-mcrypt": "*"
+        "ext-mcrypt": "*",
+        "ext-zlib": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.8",
+        "phpunit/phpunit": "^4.8",
         "satooshi/php-coveralls": "1.0.1",
         "sebastian/phpcpd": "*",
         "phploc/phploc": "*",

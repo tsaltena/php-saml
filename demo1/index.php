@@ -31,6 +31,8 @@ if (isset($_GET['sso'])) {
     $nameId = null;
     $sessionIndex = null;
     $nameIdFormat = null;
+    $samlNameIdNameQualifier = null;
+    $samlNameIdSPNameQualifier = null;
 
     if (isset($_SESSION['samlNameId'])) {
         $nameId = $_SESSION['samlNameId'];
@@ -39,16 +41,16 @@ if (isset($_GET['sso'])) {
         $nameIdFormat = $_SESSION['samlNameIdFormat'];
     }
     if (isset($_SESSION['samlNameIdNameQualifier'])) {
-        $nameIdNameQualifier = $_SESSION['samlNameIdNameQualifier'];
+        $samlNameIdNameQualifier = $_SESSION['samlNameIdNameQualifier'];
     }
     if (isset($_SESSION['samlNameIdSPNameQualifier'])) {
-        $nameIdSPNameQualifier = $_SESSION['samlNameIdSPNameQualifier'];
+        $samlNameIdSPNameQualifier = $_SESSION['samlNameIdSPNameQualifier'];
     }
     if (isset($_SESSION['samlSessionIndex'])) {
         $sessionIndex = $_SESSION['samlSessionIndex'];
     }
 
-    $auth->logout($returnTo, $parameters, $nameId, $sessionIndex, false, $nameIdFormat, $nameIdNameQualifier, $nameIdSPNameQualifier);
+    $auth->logout($returnTo, $parameters, $nameId, $sessionIndex, false, $nameIdFormat, $samlNameIdNameQualifier, $samlNameIdSPNameQualifier);
 
     # If LogoutRequest ID need to be saved in order to later validate it, do instead
     # $sloBuiltUrl = $auth->logout(null, $paramters, $nameId, $sessionIndex, true);
@@ -71,6 +73,9 @@ if (isset($_GET['sso'])) {
 
     if (!empty($errors)) {
         echo '<p>',implode(', ', $errors),'</p>';
+        if ($auth->getSettings()->isDebugActive()) {
+            echo '<p>'.htmlentities($auth->getLastErrorReason()).'</p>';
+        }
     }
 
     if (!$auth->isAuthenticated()) {
@@ -86,6 +91,8 @@ if (isset($_GET['sso'])) {
     $_SESSION['samlSessionIndex'] = $auth->getSessionIndex();
     unset($_SESSION['AuthNRequestID']);
     if (isset($_POST['RelayState']) && OneLogin_Saml2_Utils::getSelfURL() != $_POST['RelayState']) {
+        // To avoid 'Open Redirect' attacks, before execute the 
+        // redirection confirm the value of $_POST['RelayState'] is a // trusted URL.
         $auth->redirectTo($_POST['RelayState']);
     }
 } else if (isset($_GET['sls'])) {
@@ -100,7 +107,10 @@ if (isset($_GET['sso'])) {
     if (empty($errors)) {
         echo '<p>Sucessfully logged out</p>';
     } else {
-        echo '<p>', implode(', ', $errors), '</p>';
+        echo '<p>', htmlentities(implode(', ', $errors)), '</p>';
+        if ($auth->getSettings()->isDebugActive()) {
+            echo '<p>'.htmlentities($auth->getLastErrorReason()).'</p>';
+        }
     }
 }
 

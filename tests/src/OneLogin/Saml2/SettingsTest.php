@@ -53,6 +53,8 @@ class OneLogin_Saml2_SettingsTest extends PHPUnit_Framework_TestCase
         $settingsObj = new OneLogin_Saml_Settings;
         $settingsObj->idpSingleSignOnUrl = 'http://stuff.com';
         $settingsObj->spReturnUrl = 'http://sp.stuff.com';
+        $cert = file_get_contents(TEST_ROOT . '/data/customPath/certs/sp.crt');
+        $settingsObj->idpPublicCertificate = $cert;
 
         $settings = new OneLogin_Saml2_Settings($settingsObj);
 
@@ -415,6 +417,66 @@ class OneLogin_Saml2_SettingsTest extends PHPUnit_Framework_TestCase
             $this->assertContains('organization_not_enought_data', $e->getMessage());
             $this->assertContains('contact_type_invalid', $e->getMessage());
         }
+    }
+
+    /**
+    * Tests the getIdPSSOurl method of the OneLogin_Saml2_Settings class
+    *
+    * @covers OneLogin_Saml2_Settings::getIdPSSOurl
+    */
+    public function testGetIdPSSOurl()
+    {
+        $settingsDir = TEST_ROOT .'/settings/';
+        include $settingsDir.'settings1.php';
+
+        $settings = new OneLogin_Saml2_Settings($settingsInfo);
+
+        $ssoUrl = "http://idp.example.com/SSOService.php";
+        $this->assertEquals($settings->getIdPSSOUrl(), $ssoUrl);
+    }
+
+    /**
+    * Tests the getIdPSLOurl method of the OneLogin_Saml2_Settings class
+    *
+    * @covers OneLogin_Saml2_Settings::getIdPSLOurl
+    */
+    public function testGetIdPSLOurl()
+    {
+        $settingsDir = TEST_ROOT .'/settings/';
+        include $settingsDir.'settings1.php';
+
+        $settings = new OneLogin_Saml2_Settings($settingsInfo);
+
+        $sloUrl = "http://idp.example.com/SingleLogoutService.php";
+        $this->assertEquals($settings->getIdPSLOUrl(), $sloUrl);
+
+        include $settingsDir.'settings2.php';
+        $settings2 = new OneLogin_Saml2_Settings($settingsInfo);
+
+        $sloUrl = "http://idp.example.com/SingleLogoutService.php";
+        $this->assertEquals($settings2->getIdPSLOUrl(), $sloUrl);
+    }
+
+    /**
+     * Tests the getIdPSLOResponseUrl method of the OneLogin_Saml2_Settings class
+     *
+     * @covers OneLogin_Saml2_Settings::getIdPSLOResponseUrl
+     */
+    public function testGetIdPSLOResponseUrl()
+    {
+        $settingsDir = TEST_ROOT .'/settings/';
+        include $settingsDir.'settings1.php';
+
+        $settings = new OneLogin_Saml2_Settings($settingsInfo);
+
+        $sloUrl = "http://idp.example.com/SingleLogoutServiceResponse.php";
+        $this->assertEquals($settings->getIdPSLOResponseUrl(), $sloUrl);
+
+        include $settingsDir.'settings2.php';
+        $settings2 = new OneLogin_Saml2_Settings($settingsInfo);
+
+        $sloUrl = "http://idp.example.com/SingleLogoutService.php";
+        $this->assertEquals($settings2->getIdPSLOUrl(), $sloUrl);
     }
 
     /**
@@ -1101,5 +1163,35 @@ class OneLogin_Saml2_SettingsTest extends PHPUnit_Framework_TestCase
         $settingsInfo['debug'] = true;
         $settings3 = new OneLogin_Saml2_Settings($settingsInfo);
         $this->assertTrue($settings3->isDebugActive());
+    }
+    /**
+     * Tests the checkSettings method of the OneLogin_Saml2_Settings when SpValidateOnly is false and IdP is not defined
+     *
+     * @covers OneLogin_Saml2_Settings::checkSettings
+     */
+    public function testSpValidateOnlyIsTrue()
+    {
+        $settingsDir = TEST_ROOT .'/settings/';
+        include $settingsDir.'settings2.php';
+        unset($settingsInfo['idp']);
+        $settings = new OneLogin_Saml2_Settings($settingsInfo, true);
+        $this->assertEmpty($settings->getErrors());
+    }
+
+    /**
+     * Tests the checkSettings method of the OneLogin_Saml2_Settings when SpValidateOnly is false and IdP is not defined
+     *
+     * @covers OneLogin_Saml2_Settings::checkSettings
+     */
+    public function testSpValidateOnlyIsFalse()
+    {
+        $settingsDir = TEST_ROOT .'/settings/';
+        include $settingsDir.'settings2.php';
+        unset($settingsInfo['idp']);
+        try {
+            $settings = new OneLogin_Saml2_Settings($settingsInfo);
+        }catch (OneLogin_Saml2_Error $e) {
+            $this->assertContains('idp_not_found', $e->getMessage());
+        }
     }
 }

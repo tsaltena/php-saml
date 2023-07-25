@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Main class of OneLogin's PHP Toolkit
+ * Main class of PHP Toolkit
  *
  */
 class OneLogin_Saml2_Auth
@@ -144,12 +144,13 @@ class OneLogin_Saml2_Auth
      * Initializes the SP SAML instance.
      *
      * @param array|object|null $oldSettings Setting data (You can provide a OneLogin_Saml_Settings, the settings object of the Saml folder implementation)
+     * @param bool $spValidationOnly if you only as an SP , you should set it to false if not you should set it to true
      *
      * @throws OneLogin_Saml2_Error
      */
-    public function __construct($oldSettings = null)
+    public function __construct($oldSettings = null , $spValidationOnly = false)
     {
-        $this->_settings = new OneLogin_Saml2_Settings($oldSettings);
+        $this->_settings = new OneLogin_Saml2_Settings($oldSettings, $spValidationOnly);
     }
 
     /**
@@ -586,43 +587,33 @@ class OneLogin_Saml2_Auth
     }
 
     /**
-     * Gets the SSO url.
+     * Gets the IdP SSO url.
      *
-     * @return string The url of the Single Sign On Service
+     * @return string The url of the IdP Single Sign On Service
      */
     public function getSSOurl()
     {
-        $idpData = $this->_settings->getIdPData();
-        return $idpData['singleSignOnService']['url'];
+        return $this->_settings->getIdPSSOUrl();
     }
 
     /**
-     * Gets the SLO url.
+     * Gets the IdP SLO url.
      *
-     * @return string|null The url of the Single Logout Service
+     * @return string|null The url of the IdP Single Logout Service
      */
     public function getSLOurl()
     {
-        $url = null;
-        $idpData = $this->_settings->getIdPData();
-        if (isset($idpData['singleLogoutService']) && isset($idpData['singleLogoutService']['url'])) {
-            $url = $idpData['singleLogoutService']['url'];
-        }
-        return $url;
+        return $this->_settings->getIdPSLOUrl();
     }
 
     /**
-     * Gets the SLO response url.
+     * Gets the IdP SLO response url.
      *
-     * @return string|null The response url of the Single Logout Service
+     * @return string|null The response url of the IdP Single Logout Service
      */
     public function getSLOResponseUrl()
     {
-        $idpData = $this->_settings->getIdPData();
-        if (isset($idpData['singleLogoutService']) && isset($idpData['singleLogoutService']['responseUrl'])) {
-            return $idpData['singleLogoutService']['responseUrl'];
-        }
-        return $this->getSLOurl();
+        return $this->_settings->getIdPSLOResponseUrl();
     }
 
     /**
@@ -768,7 +759,7 @@ class OneLogin_Saml2_Auth
                 $response = $this->_lastResponse->saveXML();
             }
         }
-        
+
         return $response;
     }
 }
