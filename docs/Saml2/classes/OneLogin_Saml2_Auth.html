@@ -3,1141 +3,2083 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <meta charset="utf-8"/>
-    <title>    SAML PHP Toolkit &raquo; \OneLogin_Saml2_Auth
-</title>
+    <title>SAML PHP Toolkit</title>
     <meta name="author" content=""/>
     <meta name="description" content=""/>
 
-            <link href="../css/template.css" rel="stylesheet" media="all"/>
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
 
-            <!--[if lt IE 9]>
-        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-        <![endif]-->
-        <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
-        <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
-        <script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script>
-        <script src="../js/bootstrap.js" type="text/javascript"></script>
-        <script src="../js/template.js" type="text/javascript"></script>
-        <script src="../js/prettify/prettify.min.js" type="text/javascript"></script>
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
 
-            <link rel="shortcut icon" href="../img/favicon.ico"/>
-        <link rel="apple-touch-icon" href="../img/apple-touch-icon.png"/>
-        <link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png"/>
-        <link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png"/>
-    </head>
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
 <body>
 
-        <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class="icon-bar"></span> <span class="icon-bar"></span>
-                    <span class="icon-bar"></span> </a>
-                <a class="brand" href="../index.html">SAML PHP Toolkit</a>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">SAML PHP Toolkit</a>
 
-                <div class="nav-collapse">
-                    <ul class="nav">
-                        <li class="dropdown">
-                            <a href="#api" class="dropdown-toggle" data-toggle="dropdown">
-                                API Documentation <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                                                                            </ul>
-                        </li>
-                        <li class="dropdown" id="classes-menu">
-                            <a href="../namespaces/default.html">Classes</a>
-                        </li>
-                        <li class="dropdown" id="charts-menu">
-                            <a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
-                                Charts <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="../graph_class.html">
-                                        <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">44</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">1</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1796058994"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1796058994" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/OneLogin_Saml2_Auth.html">OneLogin_Saml2_Auth</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_AuthnRequest.html">OneLogin_Saml2_AuthnRequest</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_Constants.html">OneLogin_Saml2_Constants</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_Error.html">OneLogin_Saml2_Error</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_IdPMetadataParser.html">OneLogin_Saml2_IdPMetadataParser</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_LogoutRequest.html">OneLogin_Saml2_LogoutRequest</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_LogoutResponse.html">OneLogin_Saml2_LogoutResponse</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_Metadata.html">OneLogin_Saml2_Metadata</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_Response.html">OneLogin_Saml2_Response</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_Settings.html">OneLogin_Saml2_Settings</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_Utils.html">OneLogin_Saml2_Utils</a></li>
+                                                    <li class="class"><a href="../classes/OneLogin_Saml2_ValidationError.html">OneLogin_Saml2_ValidationError</a></li>
+                                            </ul>
                 </div>
             </div>
         </div>
-        <div class="go_to_top">
-            <a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>
-        </div>
     </div>
 
-    <div id="___" class="container">
-        <noscript>
-            <div class="alert alert-warning">
-                Javascript is disabled; several features are only available if Javascript is enabled.
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>OneLogin_Saml2_Auth</h1>
+                    <p><em>Main class of PHP Toolkit</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getSettings" class="">getSettings()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_setStrict" class="">setStrict()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_setSchemasPath" class="">setSchemasPath()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_processResponse" class="">processResponse()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_processSLO" class="">processSLO()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_redirectTo" class="">redirectTo()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_isAuthenticated" class="">isAuthenticated()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getAttributes" class="">getAttributes()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getAttributesWithFriendlyName" class="">getAttributesWithFriendlyName()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getNameId" class="">getNameId()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getNameIdFormat" class="">getNameIdFormat()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getNameIdNameQualifier" class="">getNameIdNameQualifier()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getNameIdSPNameQualifier" class="">getNameIdSPNameQualifier()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getSessionIndex" class="">getSessionIndex()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getSessionExpiration" class="">getSessionExpiration()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getErrors" class="">getErrors()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getLastErrorReason" class="">getLastErrorReason()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getAttribute" class="">getAttribute()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getAttributeWithFriendlyName" class="">getAttributeWithFriendlyName()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_login" class="">login()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_logout" class="">logout()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getSSOurl" class="">getSSOurl()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getSLOurl" class="">getSLOurl()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getSLOResponseUrl" class="">getSLOResponseUrl()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getLastRequestID" class="">getLastRequestID()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_buildRequestSignature" class="">buildRequestSignature()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_buildResponseSignature" class="">buildResponseSignature()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getLastMessageId" class="">getLastMessageId()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getLastAssertionId" class="">getLastAssertionId()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getLastAssertionNotOnOrAfter" class="">getLastAssertionNotOnOrAfter()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getLastRequestXML" class="">getLastRequestXML()</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_getLastResponseXML" class="">getLastResponseXML()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#method_buildMessageSignature" class="">buildMessageSignature()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__settings" class="">$_settings</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__attributes" class="">$_attributes</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__attributesWithFriendlyName" class="">$_attributesWithFriendlyName</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__nameid" class="">$_nameid</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__nameidFormat" class="">$_nameidFormat</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__nameidNameQualifier" class="">$_nameidNameQualifier</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__nameidSPNameQualifier" class="">$_nameidSPNameQualifier</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__authenticated" class="">$_authenticated</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__sessionIndex" class="">$_sessionIndex</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__sessionExpiration" class="">$_sessionExpiration</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__lastMessageId" class="">$_lastMessageId</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__lastAssertionId" class="">$_lastAssertionId</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__lastAssertionNotOnOrAfter" class="">$_lastAssertionNotOnOrAfter</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__errors" class="">$_errors</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__errorReason" class="">$_errorReason</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__lastRequestID" class="">$_lastRequestID</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__lastRequest" class="">$_lastRequest</a><br />
+                                                                    <a href="../classes/OneLogin_Saml2_Auth.html#property__lastResponse" class="">$_lastResponse</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/Auth.html"><div class="path-wrapper">Auth.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\OneLogin_Saml2_Auth</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
             </div>
-        </noscript>
 
-
-            <style>
-        .deprecated h2 {
-            text-decoration: line-through;
-        }
-    </style>
-    <div class="row">
-        <div class="span4">
-                    <div class="btn-group view pull-right" data-toggle="buttons-radio">
-        <button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
-        <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
-    </div>
-    <div class="btn-group visibility" data-toggle="buttons-checkbox">
-        <button class="btn public active" title="Show public elements">Public</button>
-        <button class="btn protected" title="Show protected elements">Protected</button>
-        <button class="btn private" title="Show private elements">Private</button>
-        <button class="btn inherited active" title="Show inherited elements">Inherited</button>
-    </div>
-
-        <ul class="side-nav nav nav-list">
-        <li class="nav-header">
-            <i class="icon-custom icon-method"></i> Methods
-            <ul>
-                                                                                                    <li class="method public">
-        <a href="#method___construct" title="__construct :: Initializes the SP SAML instance.">
-            <span class="description">Initializes the SP SAML instance.</span><pre>__construct</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_getSettings" title="getSettings :: Returns the settings info">
-            <span class="description">Returns the settings info</span><pre>getSettings</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_setStrict" title="setStrict :: Set the strict mode active/disable">
-            <span class="description">Set the strict mode active/disable</span><pre>setStrict</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_processResponse" title="processResponse :: Process the SAML Response sent by the IdP.">
-            <span class="description">Process the SAML Response sent by the IdP.</span><pre>processResponse</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_processSLO" title="processSLO :: Process the SAML Logout Response / Logout Request sent by the IdP.">
-            <span class="description">Process the SAML Logout Response / Logout Request sent by the IdP.</span><pre>processSLO</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_redirectTo" title="redirectTo :: Redirects the user to the url past by parameter
-or to the url that we defined in our SSO Request.">
-            <span class="description">Redirects the user to the url past by parameter
-or to the url that we defined in our SSO Request.</span><pre>redirectTo</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_isAuthenticated" title="isAuthenticated :: Checks if the user is authenticated or not.">
-            <span class="description">Checks if the user is authenticated or not.</span><pre>isAuthenticated</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_getAttributes" title="getAttributes :: Returns the set of SAML attributes.">
-            <span class="description">Returns the set of SAML attributes.</span><pre>getAttributes</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_getNameId" title="getNameId :: Returns the nameID">
-            <span class="description">Returns the nameID</span><pre>getNameId</pre>
-        </a>
-    </li>
-                                                                                                        <li class="method public">
-        <a href="#method_getSessionIndex" title="getSessionIndex :: Returns the sessionIndex">
-            <span class="description">The SessionIndex of the assertion</span><pre>getSessionIndex</pre>
-        </a>
-    </li>
-                                                                                                        <li class="method public">
-        <a href="#method_getErrors" title="getErrors :: Returns if there were any error">
-            <span class="description">Returns if there were any error</span><pre>getErrors</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_getLastErrorReason" title="getLastErrorReason :: Returns the reason for the last error">
-            <span class="description">Returns the reason for the last error</span><pre>getLastErrorReason</pre>
-        </a>
-    </li>
-
-
-                                                                                                        <li class="method public">
-        <a href="#method_getAttribute" title="getAttribute :: Returns the requested SAML attribute">
-            <span class="description">Returns the requested SAML attribute</span><pre>getAttribute</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_login" title="login :: Initiates the SSO process.">
-            <span class="description">Initiates the SSO process.</span><pre>login</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_logout" title="logout :: Initiates the SLO process.">
-            <span class="description">Initiates the SLO process.</span><pre>logout</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_getSSOurl" title="getSSOurl :: Gets the SSO url.">
-            <span class="description">Gets the SSO url.</span><pre>getSSOurl</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_getSLOurl" title="getSLOurl :: Gets the SLO url.">
-            <span class="description">Gets the SLO url.</span><pre>getSLOurl</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_buildRequestSignature" title="buildRequestSignature :: Generates the Signature for a SAML Request">
-            <span class="description">Generates the Signature for a SAML Request</span><pre>buildRequestSignature</pre>
-        </a>
-    </li>
-
-                                                                                                        <li class="method public">
-        <a href="#method_buildResponseSignature" title="buildResponseSignature :: Generates the Signature for a SAML Response">
-            <span class="description">Generates the Signature for a SAML Response</span><pre>buildResponseSignature</pre>
-        </a>
-    </li>
-
-                                                </ul>
-        </li>
-        <li class="nav-header protected">» Protected
-            <ul>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </ul>
-        </li>
-        <li class="nav-header private">» Private
-            <ul>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </ul>
-        </li>
-        <li class="nav-header">
-            <i class="icon-custom icon-constant"></i> Constants
-            <ul>
-                            </ul>
-        </li>
-    </ul>
-
-
-        </div>
-
-        <div class="span8">
-            <div class="element class">
-                <h1>OneLogin_Saml2_Auth</h1>
-                <small style="display: block; text-align: right">
-                                                        </small>
-                <p class="short_description">Main class of PHP Toolkit</p>
-                <div class="details">
-                    <div class="long_description">
-
-                    </div>
-                    <table class="table table-bordered">
-                                                                                                                                                                                                                                                            </table>
-
-                    <h3><i class="icon-custom icon-method"></i> Methods</h3>
-                                                                <a id="method___construct"></a>
-                        <div class="element clickable method public  method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
-                            <h2>Initializes the SP SAML instance.</h2>
-                            <pre>__construct(array $oldSettings = null) </pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-                                                                            <h3>Arguments</h3>
-                                                                                    <div class="subelement argument">
-                                                <h4>$oldSettings</h4>
-                                                <code>array</code><p><p>Setting data</p></p>
-                                            </div>
-
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_getSettings"></a>
-                        <div class="element clickable method public  method_getSettings" data-toggle="collapse" data-target=".method_getSettings .collapse">
-                            <h2>Returns the settings info</h2>
-                            <pre>getSettings() : array</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-
-                                                                            <h3>Response</h3>
-                                        <code>array</code><p><p>The settings data.</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_setStrict"></a>
-                        <div class="element clickable method public  method_setStrict" data-toggle="collapse" data-target=".method_setStrict .collapse">
-                            <h2>Set the strict mode active/disable</h2>
-                            <pre>setStrict(boolean $value) : array</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-                                                                            <h3>Arguments</h3>
-                                                                                    <div class="subelement argument">
-                                                <h4>$value</h4>
-                                                <code>boolean</code><p><p>Strict parameter</p></p>
-                                            </div>
-
-                                                                            <h3>Response</h3>
-                                        <code>array</code><p><p>The settings data.</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_processResponse"></a>
-                        <div class="element clickable method public  method_processResponse" data-toggle="collapse" data-target=".method_processResponse .collapse">
-                            <h2>Process the SAML Response sent by the IdP.</h2>
-                            <pre>processResponse(string $requestId = null) </pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-                                                                            <h3>Arguments</h3>
-                                                                                    <div class="subelement argument">
-                                                <h4>$requestId</h4>
-                                                <code>string</code><p><p>The ID of the AuthNRequest sent by this SP to the IdP</p></p>
-                                            </div>
-
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_processSLO"></a>
-                        <div class="element clickable method public  method_processSLO" data-toggle="collapse" data-target=".method_processSLO .collapse">
-                            <h2>Process the SAML Logout Response / Logout Request sent by the IdP.</h2>
-                            <pre>processSLO(boolean $keepLocalSession = false, string $requestId = null) </pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-                                                                            <h3>Arguments</h3>
-                                                                                    <div class="subelement argument">
-                                                <h4>$keepLocalSession</h4>
-                                                <code>boolean</code><p><p>When false will destroy the local session, otherwise will destroy it</p></p>
-                                            </div>
-                                                                                    <div class="subelement argument">
-                                                <h4>$requestId</h4>
-                                                <code>string</code><p><p>The ID of the LogoutRequest sent by this SP to the IdP</p></p>
-                                            </div>
-
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_redirectTo"></a>
-                        <div class="element clickable method public  method_redirectTo" data-toggle="collapse" data-target=".method_redirectTo .collapse">
-                            <h2>Redirects the user to the url past by parameter
-or to the url that we defined in our SSO Request.</h2>
-                            <pre>redirectTo(string $url = &#039;&#039;, array $parameters = array()) </pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-                                                                            <h3>Arguments</h3>
-                                                                                    <div class="subelement argument">
-                                                <h4>$url</h4>
-                                                <code>string</code><p><p>The target URL to redirect the user.</p></p>
-                                            </div>
-                                                                                    <div class="subelement argument">
-                                                <h4>$parameters</h4>
-                                                <code>array</code><p><p>Extra parameters to be passed as part of the url</p></p>
-                                            </div>
-
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_isAuthenticated"></a>
-                        <div class="element clickable method public  method_isAuthenticated" data-toggle="collapse" data-target=".method_isAuthenticated .collapse">
-                            <h2>Checks if the user is authenticated or not.</h2>
-                            <pre>isAuthenticated() : boolean</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-
-                                                                            <h3>Response</h3>
-                                        <code>boolean</code><p><p>True if the user is authenticated</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_getAttributes"></a>
-                        <div class="element clickable method public  method_getAttributes" data-toggle="collapse" data-target=".method_getAttributes .collapse">
-                            <h2>Returns the set of SAML attributes.</h2>
-                            <pre>getAttributes() : array</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-
-                                                                            <h3>Response</h3>
-                                        <code>array</code><p><p>Attributes of the user.</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_getNameId"></a>
-                        <div class="element clickable method public  method_getNameId" data-toggle="collapse" data-target=".method_getNameId .collapse">
-                            <h2>Returns the nameID</h2>
-                            <pre>getNameId() : string</pre>
-                            <div class="labels">                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-
-                                                                            <h3>Response</h3>
-                                        <code>string</code><p><p>The nameID of the assertion</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-
-                            <a id="method_getSessionIndex"></a>
-                        <div class="element clickable method public  method_getSessionIndex" data-toggle="collapse" data-target=".method_getSessionIndex .collapse">
-                            <h2>Returns the SessionIndex</h2>
-                            <pre>getSessionIndex() : string</pre>
-                            <div class="labels">                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-
-                                                                            <h3>Response</h3>
-                                        <code>string</code><p><p>The SessionIndex of the assertion</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-
-
-                                            <a id="method_getErrors"></a>
-                        <div class="element clickable method public  method_getErrors" data-toggle="collapse" data-target=".method_getErrors .collapse">
-                            <h2>Returns if there were any error</h2>
-                            <pre>getErrors() : array</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-
-                                                                            <h3>Response</h3>
-                                        <code>array</code><p><p>Errors</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-
-                                    <a id="method_getLastErrorReason"></a>
-                        <div class="element clickable method public  method_getLastErrorReason" data-toggle="collapse" data-target=".method_getLastErrorReason .collapse">
-                            <h2>Returns the reason for the last error</h2>
-                            <pre>getLastErrorReason() : string</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-
-                                                                            <h3>Response</h3>
-                                        <code>String</code><p><p>Error</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-
-                                            <a id="method_getAttribute"></a>
-                        <div class="element clickable method public  method_getAttribute" data-toggle="collapse" data-target=".method_getAttribute .collapse">
-                            <h2>Returns the requested SAML attribute</h2>
-                            <pre>getAttribute(string $name) : NULL || Array</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-                                                                            <h3>Arguments</h3>
-                                                                                    <div class="subelement argument">
-                                                <h4>$name</h4>
-                                                <code>string</code><p><p>The requested attribute of the user.</p></p>
-                                            </div>
-
-                                                                            <h3>Response</h3>
-                                        <code>NULL</code><p><p>|| array Requested SAML attribute ($name).</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_login"></a>
-                        <div class="element clickable method public  method_login" data-toggle="collapse" data-target=".method_login .collapse">
-                            <h2>Initiates the SSO process.</h2>
-                            <pre>login(string $returnTo = null, $parameters = array(), $forceAuthn = false, $isPassive = false) </pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-                                                                            <h3>Arguments</h3>
-                                                                                    <div class="subelement argument">
-                                                <h4>$returnTo</h4>
-                                                <code>string</code><p><p>The target URL the user should be returned to after login.</p></p>
-                                                <h4>$parameters</h4>
-                                                <code>array</code><p><p>Extra parameters to be added to the GET.</p></p>
-                                                <h4>$forceAuthn</h4>
-                                                <code>bool</code><p><p>When true the AuthNReuqest will set the ForceAuthn='true'.</p></p>
-                                                <h4>$isPassive</h4>
-                                                <code>bool</code><p><p>When true the AuthNReuqest will set the Ispassive='true'.</p></p>
-                                            </div>
-
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_logout"></a>
-                        <div class="element clickable method public  method_logout" data-toggle="collapse" data-target=".method_logout .collapse">
-                            <h2>Initiates the SLO process.</h2>
-                            <pre>logout(string $returnTo = null, array $parameters = array(), string $nameId = null, string $sessionIndex = null) </pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-                                                                            <h3>Arguments</h3>
-                                                                                    <div class="subelement argument">
-                                                <h4>$returnTo</h4>
-                                                <code>string</code><p><p>The target URL the user should be returned to after logout.</p></p>
-                                                <h4>$parameters</h4>
-                                                <code>array</code><p><p>Extra parameters to be added to the GET.</p></p>
-                                                <h4>$nameId</h4>
-                                                <code>string</code><p><p>The NameID that will be set in the LogoutRequest.</p></p>
-                                                <h4>$sessionIndex</h4>
-                                                <code>string</code><p><p>The SessionIndex (taken from the SAML Response in the SSO process).</p></p>
-                                            </div>
-
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_getSSOurl"></a>
-                        <div class="element clickable method public  method_getSSOurl" data-toggle="collapse" data-target=".method_getSSOurl .collapse">
-                            <h2>Gets the SSO url.</h2>
-                            <pre>getSSOurl() : string</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-
-                                                                            <h3>Response</h3>
-                                        <code>string</code><p><p>The url of the Single Sign On Service</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_getSLOurl"></a>
-                        <div class="element clickable method public  method_getSLOurl" data-toggle="collapse" data-target=".method_getSLOurl .collapse">
-                            <h2>Gets the SLO url.</h2>
-                            <pre>getSLOurl() : string</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-
-                                                                            <h3>Response</h3>
-                                        <code>string</code><p><p>The url of the Single Logout Service</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_buildRequestSignature"></a>
-                        <div class="element clickable method public  method_buildRequestSignature" data-toggle="collapse" data-target=".method_buildRequestSignature .collapse">
-                            <h2>Generates the Signature for a SAML Request</h2>
-                            <pre>buildRequestSignature(string $samlRequest, string $relayState) : string</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-                                                                            <h3>Arguments</h3>
-                                                                                    <div class="subelement argument">
-                                                <h4>$samlRequest</h4>
-                                                <code>string</code><p><p>The SAML Request</p></p>
-                                            </div>
-                                                                                    <div class="subelement argument">
-                                                <h4>$relayState</h4>
-                                                <code>string</code><p><p>The RelayState</p></p>
-                                            </div>
-
-                                                                            <h3>Response</h3>
-                                        <code>string</code><p><p>A base64 encoded signature</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-                                            <a id="method_buildResponseSignature"></a>
-                        <div class="element clickable method public  method_buildResponseSignature" data-toggle="collapse" data-target=".method_buildResponseSignature .collapse">
-                            <h2>Generates the Signature for a SAML Response</h2>
-                            <pre>buildResponseSignature(string $samlResponse, string $relayState) : string</pre>
-                            <div class="labels">
-                                                                                                                                                                                            </div>
-                            <div class="row collapse">
-                                <div class="detail-description">
-                                    <div class="long_description"></div>
-
-                                    <table class="table">
-                                                                                    <tr>
-                                                <th>
-
-                                                </th>
-                                                <td>
-                                                                                                    </td>
-                                            </tr>
-                                                                            </table>
-
-                                                                            <h3>Arguments</h3>
-                                                                                    <div class="subelement argument">
-                                                <h4>$samlResponse</h4>
-                                                <code>string</code><p><p>The SAML Response</p></p>
-                                            </div>
-                                                                                    <div class="subelement argument">
-                                                <h4>$relayState</h4>
-                                                <code>string</code><p><p>The RelayState</p></p>
-                                            </div>
-
-                                                                            <h3>Response</h3>
-                                        <code>string</code><p><p>A base64 encoded signature</p></p>
-                                                                    </div>
-                            </div>
-                        </div>
-
-
-                                                                <h3><i class="icon-custom icon-property"></i> Properties</h3>
-                                                    <a id="property__settings"> </a>
-                            <div class="element clickable property  private property__settings" data-toggle="collapse" data-target=".property__settings .collapse">
-                                <h2>Settings data.</h2>
-                                <pre>_settings : array</pre>
-                                <div class="labels">
-                                                                                                        </div>
-                                <div class="row collapse">
-                                    <div class="detail-description">
-                                        <div class="long_description"></div>
-
-                                        <table class="table">
-                                                                                            <tr>
-                                                    <th>
-                                                        var
-                                                    </th>
-                                                    <td>
-
-                                                                                                            </td>
-                                                </tr>
-                                                                                            <tr>
-                                                    <th>
-
-                                                    </th>
-                                                    <td>
-                                                                                                            </td>
-                                                </tr>
-                                                                                    </table>
-
-                                                                                    <h3>Type(s)</h3>
-                                            <code>array</code>
-                                                                            </div>
-                                </div>
-                            </div>
-                                                    <a id="property__attributes"> </a>
-                            <div class="element clickable property  private property__attributes" data-toggle="collapse" data-target=".property__attributes .collapse">
-                                <h2>User attributes data.</h2>
-                                <pre>_attributes : array</pre>
-                                <div class="labels">
-                                                                                                        </div>
-                                <div class="row collapse">
-                                    <div class="detail-description">
-                                        <div class="long_description"></div>
-
-                                        <table class="table">
-                                                                                            <tr>
-                                                    <th>
-                                                        var
-                                                    </th>
-                                                    <td>
-
-                                                                                                            </td>
-                                                </tr>
-                                                                                            <tr>
-                                                    <th>
-
-                                                    </th>
-                                                    <td>
-                                                                                                            </td>
-                                                </tr>
-                                                                                    </table>
-
-                                                                                    <h3>Type(s)</h3>
-                                            <code>array</code>
-                                                                            </div>
-                                </div>
-                            </div>
-                                                    <a id="property__nameid"> </a>
-                            <div class="element clickable property  private property__nameid" data-toggle="collapse" data-target=".property__nameid .collapse">
-                                <h2>NameID</h2>
-                                <pre>_nameid : string</pre>
-                                <div class="labels">
-                                                                                                        </div>
-                                <div class="row collapse">
-                                    <div class="detail-description">
-                                        <div class="long_description"></div>
-
-                                        <table class="table">
-                                                                                            <tr>
-                                                    <th>
-                                                        var
-                                                    </th>
-                                                    <td>
-
-                                                                                                            </td>
-                                                </tr>
-                                                                                            <tr>
-                                                    <th>
-
-                                                    </th>
-                                                    <td>
-                                                                                                            </td>
-                                                </tr>
-                                                                                    </table>
-
-                                                                                    <h3>Type(s)</h3>
-                                            <code>string</code>
-                                                                            </div>
-                                </div>
-                            </div>
-                                                    <a id="property__authenticated"> </a>
-                            <div class="element clickable property  private property__authenticated" data-toggle="collapse" data-target=".property__authenticated .collapse">
-                                <h2>If user is authenticated.</h2>
-                                <pre>_authenticated : boolean</pre>
-                                <div class="labels">
-                                                                                                        </div>
-                                <div class="row collapse">
-                                    <div class="detail-description">
-                                        <div class="long_description"></div>
-
-                                        <table class="table">
-                                                                                            <tr>
-                                                    <th>
-                                                        var
-                                                    </th>
-                                                    <td>
-
-                                                                                                            </td>
-                                                </tr>
-                                                                                            <tr>
-                                                    <th>
-
-                                                    </th>
-                                                    <td>
-                                                                                                            </td>
-                                                </tr>
-                                                                                    </table>
-
-                                                                                    <h3>Type(s)</h3>
-                                            <code>boolean</code>
-                                                                            </div>
-                                </div>
-                            </div>
-                                                    <a id="property__sessionIndex"> </a>
-                            <div class="element clickable property  private property__sessionIndex" data-toggle="collapse" data-target=".property__sessionIndex .collapse">
-                                <h2>SessionIndex. When the user is logged, this stored the from the AuthnStatement of the SAML Response.</h2>
-                                <pre>_sessionIndex : string</pre>
-                                <div class="labels">
-                                                                                                        </div>
-                                <div class="row collapse">
-                                    <div class="detail-description">
-                                        <div class="long_description"></div>
-
-                                        <table class="table">
-                                                                                            <tr>
-                                                    <th>
-                                                        var
-                                                    </th>
-                                                    <td>
-
-                                                                                                            </td>
-                                                </tr>
-                                                                                            <tr>
-                                                    <th>
-
-                                                    </th>
-                                                    <td>
-                                                                                                            </td>
-                                                </tr>
-                                                                                    </table>
-
-                                                                                    <h3>Type(s)</h3>
-                                            <code>boolean</code>
-                                                                            </div>
-                                </div>
-                            </div>
-                                                    <a id="property__errors"> </a>
-                            <div class="element clickable property  private property__errors" data-toggle="collapse" data-target=".property__errors .collapse">
-                                <h2>If any error.</h2>
-                                <pre>_errors : array</pre>
-                                <div class="labels">
-                                                                                                        </div>
-                                <div class="row collapse">
-                                    <div class="detail-description">
-                                        <div class="long_description"></div>
-
-                                        <table class="table">
-                                                                                            <tr>
-                                                    <th>
-                                                        var
-                                                    </th>
-                                                    <td>
-
-                                                                                                            </td>
-                                                </tr>
-                                                                                            <tr>
-                                                    <th>
-
-                                                    </th>
-                                                    <td>
-                                                                                                            </td>
-                                                </tr>
-                                                                                    </table>
-
-                                                                                    <h3>Type(s)</h3>
-                                            <code>array</code>
-                                                                            </div>
-                                </div>
-                            </div>
-                                                            </div>
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
             </div>
-            <a id="\OneLogin_Saml2_Auth"></a>
-            <ul class="breadcrumb">
-                <li><a href="../index.html"><i class="icon-custom icon-class"></i></a></li>
 
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__settings" name="property__settings" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_settings</h3>
+                <pre class="signature">$_settings : \OneLogin_Saml2_Settings</pre>
+                <p><em>Settings data.</em></p>
+                
 
-    <li><span class="divider">\</span><a href="../namespaces/default.html">\</a></li>
+                                <h4>Type</h4>
+                <a href="../classes/OneLogin_Saml2_Settings.html">\OneLogin_Saml2_Settings</a>
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
 
-                <li class="active"><span class="divider">\</span><a href="../classes/OneLogin_Saml2_Auth.html">OneLogin_Saml2_Auth</a></li>
-            </ul>
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__attributes" name="property__attributes" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_attributes</h3>
+                <pre class="signature">$_attributes : array</pre>
+                <p><em>User attributes data.</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__attributesWithFriendlyName" name="property__attributesWithFriendlyName" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_attributesWithFriendlyName</h3>
+                <pre class="signature">$_attributesWithFriendlyName : array</pre>
+                <p><em>User attributes data with FriendlyName index.</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__nameid" name="property__nameid" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_nameid</h3>
+                <pre class="signature">$_nameid : string</pre>
+                <p><em>NameID</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__nameidFormat" name="property__nameidFormat" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_nameidFormat</h3>
+                <pre class="signature">$_nameidFormat : string</pre>
+                <p><em>NameID Format</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__nameidNameQualifier" name="property__nameidNameQualifier" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_nameidNameQualifier</h3>
+                <pre class="signature">$_nameidNameQualifier : string</pre>
+                <p><em>NameID NameQualifier</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__nameidSPNameQualifier" name="property__nameidSPNameQualifier" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_nameidSPNameQualifier</h3>
+                <pre class="signature">$_nameidSPNameQualifier : string</pre>
+                <p><em>NameID SP NameQualifier</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__authenticated" name="property__authenticated" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_authenticated</h3>
+                <pre class="signature">$_authenticated : boolean</pre>
+                <p><em>If user is authenticated.</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__sessionIndex" name="property__sessionIndex" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_sessionIndex</h3>
+                <pre class="signature">$_sessionIndex : string</pre>
+                <p><em>SessionIndex. When the user is logged, this stored it
+from the AuthnStatement of the SAML Response</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__sessionExpiration" name="property__sessionExpiration" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_sessionExpiration</h3>
+                <pre class="signature">$_sessionExpiration : integer|null</pre>
+                <p><em>SessionNotOnOrAfter. When the user is logged, this stored it
+from the AuthnStatement of the SAML Response</em></p>
+                
+
+                                <h4>Type</h4>
+                integer|null
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__lastMessageId" name="property__lastMessageId" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_lastMessageId</h3>
+                <pre class="signature">$_lastMessageId : string</pre>
+                <p><em>The ID of the last message processed</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__lastAssertionId" name="property__lastAssertionId" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_lastAssertionId</h3>
+                <pre class="signature">$_lastAssertionId : string</pre>
+                <p><em>The ID of the last assertion processed</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__lastAssertionNotOnOrAfter" name="property__lastAssertionNotOnOrAfter" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_lastAssertionNotOnOrAfter</h3>
+                <pre class="signature">$_lastAssertionNotOnOrAfter : integer</pre>
+                <p><em>The NotOnOrAfter value of the valid SubjectConfirmationData
+node (if any) of the last assertion processed</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__errors" name="property__errors" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_errors</h3>
+                <pre class="signature">$_errors : array</pre>
+                <p><em>If any error.</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__errorReason" name="property__errorReason" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_errorReason</h3>
+                <pre class="signature">$_errorReason : string|null</pre>
+                <p><em>Reason of the last error.</em></p>
+                
+
+                                <h4>Type</h4>
+                string|null
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__lastRequestID" name="property__lastRequestID" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_lastRequestID</h3>
+                <pre class="signature">$_lastRequestID : string</pre>
+                <p><em>Last AuthNRequest ID or LogoutRequest ID generated by this Service Provider</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__lastRequest" name="property__lastRequest" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_lastRequest</h3>
+                <pre class="signature">$_lastRequest : string</pre>
+                <p><em>The most recently-constructed/processed XML SAML request
+(AuthNRequest, LogoutRequest)</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__lastResponse" name="property__lastResponse" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_lastResponse</h3>
+                <pre class="signature">$_lastResponse : string|\DomDocument|null</pre>
+                <p><em>The most recently-constructed/processed XML SAML response
+(SAMLResponse, LogoutResponse). If the SAMLResponse was
+encrypted, by default tries to return the decrypted XML</em></p>
+                
+
+                                <h4>Type</h4>
+                string|\DomDocument|null
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct(array|object|null  <span class="argument">$oldSettings = null</span>, boolean  <span class="argument">$spValidationOnly = false</span>) </pre>
+                <p><em>Initializes the SP SAML instance.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array|object|null</td>
+                                <td>$oldSettings </td>
+                                <td><p>Setting data (You can provide a OneLogin_Saml_Settings, the settings object of the Saml folder implementation)</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$spValidationOnly </td>
+                                <td><p>if you only as an SP , you should set it to false if not you should set it to true</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\OneLogin_Saml2_Error</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSettings" name="method_getSettings" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSettings()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSettings() : \OneLogin_Saml2_Settings</pre>
+                <p><em>Returns the settings info</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/OneLogin_Saml2_Settings.html">\OneLogin_Saml2_Settings</a>
+                                            &mdash; <p>The settings data.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setStrict" name="method_setStrict" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setStrict()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setStrict(boolean  <span class="argument">$value</span>) </pre>
+                <p><em>Set the strict mode active/disable</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$value </td>
+                                <td><p>Strict parameter</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\OneLogin_Saml2_Error</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setSchemasPath" name="method_setSchemasPath" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setSchemasPath()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setSchemasPath(string  <span class="argument">$path</span>) : $this</pre>
+                <p><em>Set schemas path</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$path </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    $this
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_processResponse" name="method_processResponse" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">processResponse()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">processResponse(string|null  <span class="argument">$requestId = null</span>) </pre>
+                <p><em>Process the SAML Response sent by the IdP.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string|null</td>
+                                <td>$requestId </td>
+                                <td><p>The ID of the AuthNRequest sent by this SP to the IdP</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\OneLogin_Saml2_Error</dt>
+                            <dd></dd>
+                                                    <dt>\OneLogin_Saml2_ValidationError</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_processSLO" name="method_processSLO" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">processSLO()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">processSLO(boolean  <span class="argument">$keepLocalSession = false</span>, string|null  <span class="argument">$requestId = null</span>, boolean  <span class="argument">$retrieveParametersFromServer = false</span>, callable  <span class="argument">$cbDeleteSession = null</span>, boolean  <span class="argument">$stay = false</span>) : string|null</pre>
+                <p><em>Process the SAML Logout Response / Logout Request sent by the IdP.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$keepLocalSession </td>
+                                <td><p>When false will destroy the local session, otherwise will keep it</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string|null</td>
+                                <td>$requestId </td>
+                                <td><p>The ID of the LogoutRequest sent by this SP to the IdP</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$retrieveParametersFromServer </td>
+                                <td><p>True if we want to use parameters from $_SERVER to validate the signature</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>callable</td>
+                                <td>$cbDeleteSession </td>
+                                <td><p>Callback to be executed to delete session</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$stay </td>
+                                <td><p>True if we want to stay (returns the url string) False to redirect</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\OneLogin_Saml2_Error</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    string|null
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_redirectTo" name="method_redirectTo" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">redirectTo()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">redirectTo(string  <span class="argument">$url = &#039;&#039;</span>, array  <span class="argument">$parameters = array()</span>, boolean  <span class="argument">$stay = false</span>) : string|null</pre>
+                <p><em>Redirects the user to the url past by parameter
+or to the url that we defined in our SSO Request.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$url </td>
+                                <td><p>The target URL to redirect the user.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$parameters </td>
+                                <td><p>Extra parameters to be passed as part of the url</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$stay </td>
+                                <td><p>True if we want to stay (returns the url string) False to redirect</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\OneLogin_Saml2_Error</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    string|null
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isAuthenticated" name="method_isAuthenticated" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isAuthenticated()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isAuthenticated() : boolean</pre>
+                <p><em>Checks if the user is authenticated or not.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>True if the user is authenticated</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getAttributes" name="method_getAttributes" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getAttributes()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getAttributes() : array</pre>
+                <p><em>Returns the set of SAML attributes.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Attributes of the user.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getAttributesWithFriendlyName" name="method_getAttributesWithFriendlyName" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getAttributesWithFriendlyName()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getAttributesWithFriendlyName() : array</pre>
+                <p><em>Returns the set of SAML attributes indexed by FriendlyName</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Attributes of the user.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getNameId" name="method_getNameId" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getNameId()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getNameId() : string</pre>
+                <p><em>Returns the nameID</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The nameID of the assertion</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getNameIdFormat" name="method_getNameIdFormat" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getNameIdFormat()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getNameIdFormat() : string</pre>
+                <p><em>Returns the nameID Format</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The nameID Format of the assertion</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getNameIdNameQualifier" name="method_getNameIdNameQualifier" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getNameIdNameQualifier()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getNameIdNameQualifier() : string</pre>
+                <p><em>Returns the nameID NameQualifier</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The nameID NameQualifier of the assertion</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getNameIdSPNameQualifier" name="method_getNameIdSPNameQualifier" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getNameIdSPNameQualifier()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getNameIdSPNameQualifier() : string</pre>
+                <p><em>Returns the nameID SP NameQualifier</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The nameID SP NameQualifier of the assertion</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSessionIndex" name="method_getSessionIndex" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSessionIndex()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSessionIndex() : string|null</pre>
+                <p><em>Returns the SessionIndex</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string|null
+                                            &mdash; <p>The SessionIndex of the assertion</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSessionExpiration" name="method_getSessionExpiration" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSessionExpiration()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSessionExpiration() : integer|null</pre>
+                <p><em>Returns the SessionNotOnOrAfter</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer|null
+                                            &mdash; <p>The SessionNotOnOrAfter of the assertion</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getErrors" name="method_getErrors" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getErrors()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getErrors() : array</pre>
+                <p><em>Returns if there were any error</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Errors</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLastErrorReason" name="method_getLastErrorReason" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLastErrorReason()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLastErrorReason() : string|null</pre>
+                <p><em>Returns the reason for the last error</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string|null
+                                            &mdash; <p>Error reason</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getAttribute" name="method_getAttribute" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getAttribute()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getAttribute(string  <span class="argument">$name</span>) : array|null</pre>
+                <p><em>Returns the requested SAML attribute</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name </td>
+                                <td><p>The requested attribute of the user.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array|null
+                                            &mdash; <p>Requested SAML attribute ($name).</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getAttributeWithFriendlyName" name="method_getAttributeWithFriendlyName" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getAttributeWithFriendlyName()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getAttributeWithFriendlyName(string  <span class="argument">$friendlyName</span>) : array|null</pre>
+                <p><em>Returns the requested SAML attribute indexed by FriendlyName</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$friendlyName </td>
+                                <td><p>The requested attribute of the user.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array|null
+                                            &mdash; <p>Requested SAML attribute ($friendlyName).</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_login" name="method_login" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">login()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">login(string|null  <span class="argument">$returnTo = null</span>, array  <span class="argument">$parameters = array()</span>, boolean  <span class="argument">$forceAuthn = false</span>, boolean  <span class="argument">$isPassive = false</span>, boolean  <span class="argument">$stay = false</span>, boolean  <span class="argument">$setNameIdPolicy = true</span>, string  <span class="argument">$nameIdValueReq = null</span>) : string|null</pre>
+                <p><em>Initiates the SSO process.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string|null</td>
+                                <td>$returnTo </td>
+                                <td><p>The target URL the user should be returned to after login.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$parameters </td>
+                                <td><p>Extra parameters to be added to the GET</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$forceAuthn </td>
+                                <td><p>When true the AuthNRequest will set the ForceAuthn='true'</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$isPassive </td>
+                                <td><p>When true the AuthNRequest will set the Ispassive='true'</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$stay </td>
+                                <td><p>True if we want to stay (returns the url string) False to redirect</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$setNameIdPolicy </td>
+                                <td><p>When true the AuthNRueqest will set a nameIdPolicy element</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$nameIdValueReq </td>
+                                <td><p>Indicates to the IdP the subject that should be authenticated</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\OneLogin_Saml2_Error</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    string|null
+                                            &mdash; <p>If $stay is True, it return a string with the SLO URL + LogoutRequest + parameters</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_logout" name="method_logout" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">logout()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">logout(string|null  <span class="argument">$returnTo = null</span>, array  <span class="argument">$parameters = array()</span>, string|null  <span class="argument">$nameId = null</span>, string|null  <span class="argument">$sessionIndex = null</span>, boolean  <span class="argument">$stay = false</span>, string|null  <span class="argument">$nameIdFormat = null</span>, string|null  <span class="argument">$nameIdNameQualifier = null</span>,   <span class="argument">$nameIdSPNameQualifier = null</span>) : string|null</pre>
+                <p><em>Initiates the SLO process.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string|null</td>
+                                <td>$returnTo </td>
+                                <td><p>The target URL the user should be returned to after logout.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$parameters </td>
+                                <td><p>Extra parameters to be added to the GET</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string|null</td>
+                                <td>$nameId </td>
+                                <td><p>The NameID that will be set in the LogoutRequest.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string|null</td>
+                                <td>$sessionIndex </td>
+                                <td><p>The SessionIndex (taken from the SAML Response in the SSO process).</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$stay </td>
+                                <td><p>True if we want to stay (returns the url string) False to redirect</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string|null</td>
+                                <td>$nameIdFormat </td>
+                                <td><p>The NameID Format will be set in the LogoutRequest.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string|null</td>
+                                <td>$nameIdNameQualifier </td>
+                                <td><p>The NameID NameQualifier will be set in the LogoutRequest.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$nameIdSPNameQualifier </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\OneLogin_Saml2_Error</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    string|null
+                                            &mdash; <p>If $stay is True, it return a string with the SLO URL + LogoutRequest + parameters</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSSOurl" name="method_getSSOurl" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSSOurl()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSSOurl() : string</pre>
+                <p><em>Gets the IdP SSO url.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The url of the IdP Single Sign On Service</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSLOurl" name="method_getSLOurl" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSLOurl()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSLOurl() : string|null</pre>
+                <p><em>Gets the IdP SLO url.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string|null
+                                            &mdash; <p>The url of the IdP Single Logout Service</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSLOResponseUrl" name="method_getSLOResponseUrl" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSLOResponseUrl()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSLOResponseUrl() : string|null</pre>
+                <p><em>Gets the IdP SLO response url.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string|null
+                                            &mdash; <p>The response url of the IdP Single Logout Service</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLastRequestID" name="method_getLastRequestID" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLastRequestID()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLastRequestID() : string</pre>
+                <p><em>Gets the ID of the last AuthNRequest or LogoutRequest generated by the Service Provider.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The ID of the Request SAML message.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_buildRequestSignature" name="method_buildRequestSignature" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">buildRequestSignature()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">buildRequestSignature(string  <span class="argument">$samlRequest</span>, string  <span class="argument">$relayState</span>, string  <span class="argument">$signAlgorithm = \XMLSecurityKey::RSA_SHA1</span>) : string</pre>
+                <p><em>Generates the Signature for a SAML Request</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$samlRequest </td>
+                                <td><p>The SAML Request</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$relayState </td>
+                                <td><p>The RelayState</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$signAlgorithm </td>
+                                <td><p>Signature algorithm method</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\OneLogin_Saml2_Error</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>A base64 encoded signature</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_buildResponseSignature" name="method_buildResponseSignature" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">buildResponseSignature()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">buildResponseSignature(string  <span class="argument">$samlResponse</span>, string  <span class="argument">$relayState</span>, string  <span class="argument">$signAlgorithm = \XMLSecurityKey::RSA_SHA1</span>) : string</pre>
+                <p><em>Generates the Signature for a SAML Response</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$samlResponse </td>
+                                <td><p>The SAML Response</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$relayState </td>
+                                <td><p>The RelayState</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$signAlgorithm </td>
+                                <td><p>Signature algorithm method</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\OneLogin_Saml2_Error</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>A base64 encoded signature</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLastMessageId" name="method_getLastMessageId" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLastMessageId()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLastMessageId() : string</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The ID of the last message processed</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLastAssertionId" name="method_getLastAssertionId" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLastAssertionId()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLastAssertionId() : string</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The ID of the last assertion processed</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLastAssertionNotOnOrAfter" name="method_getLastAssertionNotOnOrAfter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLastAssertionNotOnOrAfter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLastAssertionNotOnOrAfter() : integer</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                            &mdash; <p>The NotOnOrAfter value of the valid
+SubjectConfirmationData node (if any)
+of the last assertion processed</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLastRequestXML" name="method_getLastRequestXML" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLastRequestXML()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLastRequestXML() : string</pre>
+                <p><em>Returns the most recently-constructed/processed
+XML SAML request (AuthNRequest, LogoutRequest)</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The Request XML</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLastResponseXML" name="method_getLastResponseXML" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLastResponseXML()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLastResponseXML() : string|null</pre>
+                <p><em>Returns the most recently-constructed/processed
+XML SAML response (SAMLResponse, LogoutResponse).</em></p>
+                <p>If the SAMLResponse was encrypted, by default tries
+to return the decrypted XML.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    string|null
+                                            &mdash; <p>The Response XML</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_buildMessageSignature" name="method_buildMessageSignature" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">buildMessageSignature()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">buildMessageSignature(string  <span class="argument">$samlMessage</span>, string  <span class="argument">$relayState</span>, string  <span class="argument">$signAlgorithm = \XMLSecurityKey::RSA_SHA256</span>, string  <span class="argument">$type = &quot;SAMLRequest&quot;</span>) : string</pre>
+                <p><em>Generates the Signature for a SAML Response</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$samlMessage </td>
+                                <td><p>The SAML Response</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$relayState </td>
+                                <td><p>The RelayState</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$signAlgorithm </td>
+                                <td><p>Signature algorithm method</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$type </td>
+                                <td><p>&quot;SAMLRequest&quot; or &quot;SAMLResponse&quot;</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\OneLogin_Saml2_Error</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>A base64 encoded signature</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">Auth.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Auth.php.txt" class="language-php line-numbers"></pre>
         </div>
     </div>
 
-    </div>
-
-        <footer class="span12">
-            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by
-            <a href="http://glyphicons.com/">Glyphicons</a>.<br/>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and<br/>
-            generated on Mon, 14 Apr 2014 20:25:55 +0100.<br/>
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on September 30th, 2023 at 01:16.
+                </section>
+            </section>
+        </section>
     </footer>
-    </body>
+</div>
+
+</body>
 </html>

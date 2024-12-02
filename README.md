@@ -5,7 +5,9 @@
 Add SAML support to your PHP software using this library.
 
 
-**The 3.X branch is compatible with PHP > 7.1, so if you are using that PHP version, use it and not the 2.X or the master branch**
+**The 3.X branch is compatible with PHP 7.0, PHP 7.1, PHP 7.2 , so if you are using that PHP version, use it and not the 2.X or the master branch**
+
+**The 4.X branch is compatible with PHP >= 7.3 and PHP 8.X**
 
 Warning
 -------
@@ -95,7 +97,6 @@ Installation
  * `openssl`. Install the openssl library. It handles x509 certificates.
  * `mcrypt`. Install that library and its php driver if you're going to handle
    encrypted data (`nameID`, `assertions`).
- * `gettext`. Install that library and its php driver. It handles translations.
  * `curl`. Install that library and its php driver if you plan to use the IdP Metadata parser.
 
 Since [PHP 5.3 is officially unsupported](http://php.net/eol.php) we recommend you to use a newer PHP version.
@@ -190,14 +191,14 @@ a trusted and expected URL.
 Read more about Open Redirect [CWE-601](https://cwe.mitre.org/data/definitions/601.html).
 
 
-### Avoiding Reply attacks ###
+### Avoiding Replay attacks ###
 
-A reply attack is basically try to reuse an intercepted valid SAML Message in order to impersonate a SAML action (SSO or SLO).
+A replay attack is basically try to reuse an intercepted valid SAML Message in order to impersonate a SAML action (SSO or SLO).
 
 SAML Messages have a limited timelife (NotBefore, NotOnOrAfter) that
 make harder this kind of attacks, but they are still possible.
 
-In order to avoid them, the SP can keep a list of SAML Messages or Assertion IDs alredy valdidated and processed. Those values only need
+In order to avoid them, the SP can keep a list of SAML Messages or Assertion IDs alredy validated and processed. Those values only need
 to be stored the amount of time of the SAML Message life time, so
 we don't need to store all processed message/assertion Ids, but the most recent ones.
 
@@ -555,11 +556,11 @@ $advancedSettings = array (
 
         // If true, Destination URL should strictly match to the address to
         // which the response has been sent.
-        // Notice that if 'relaxDestinationValidation' is true an empty Destintation
+        // Notice that if 'relaxDestinationValidation' is true an empty Destination
         // will be accepted.
         'destinationStrictlyMatches' => false,
 
-        // If true, SAMLResponses with an InResponseTo value will be rejectd if not
+        // If true, SAMLResponses with an InResponseTo value will be rejected if not
         // AuthNRequest ID provided to the validation method.
         'rejectUnsolicitedResponsesWithInResponseTo' => false,
 
@@ -599,7 +600,7 @@ $advancedSettings = array (
     ),
 
     // Organization information template, the info in en_US lang is
-    // recomended, add more if required.
+    // recommended, add more if required.
     'organization' => array (
         'en-US' => array(
             'name' => '',
@@ -714,7 +715,7 @@ The login method can receive other six optional parameters:
 * `$parameters` - An array of parameters that will be added to the `GET` in the HTTP-Redirect.
 * `$forceAuthn` - When true the `AuthNRequest` will set the `ForceAuthn='true'`
 * `$isPassive` - When true the `AuthNRequest` will set the `Ispassive='true'`
-* `$strict` - True if we want to stay (returns the url string) False to redirect
+* `$stay` - True if we want to stay (returns the url string) False to redirect
 * `$setNameIdPolicy` - When true the AuthNRequest will set a nameIdPolicy element.
 * `$nameIdValueReq` - Indicates to the IdP the subject that should be authenticated.
 
@@ -946,7 +947,7 @@ $auth->processSLO(false, $requestID);
 $errors = $auth->getErrors();
 
 if (empty($errors)) {
-    echo 'Sucessfully logged out';
+    echo 'Successfully logged out';
 } else {
     echo implode(', ', $errors);
 }
@@ -1153,7 +1154,7 @@ if (isset($_GET['sso'])) {    // SSO action.  Will send an AuthNRequest to the I
         echo '<p>', implode(', ', $errors), '</p>';
     }
                                           // This check if the response was
-    if (!$auth->isAuthenticated()) {      // sucessfully validated and the user
+    if (!$auth->isAuthenticated()) {      // successfully validated and the user
         echo "<p>Not authenticated</p>";  // data retrieved or not
         exit();
     }
@@ -1168,7 +1169,7 @@ if (isset($_GET['sso'])) {    // SSO action.  Will send an AuthNRequest to the I
     $auth->processSLO();            // Process the Logout Request & Logout Response
     $errors = $auth->getErrors(); // Retrieves possible validation errors
     if (empty($errors)) {
-        echo '<p>Sucessfully logged out</p>';
+        echo '<p>Successfully logged out</p>';
     } else {
         echo '<p>', implode(', ', $errors), '</p>';
     }
@@ -1418,7 +1419,7 @@ SAML 2 Authentication Response class
 SAML 2 Logout Request class
 
  * `OneLogin_Saml2_LogoutRequest` - Constructs the Logout Request object.
- * `getRequest` - Returns the Logout Request defated, base64encoded, unsigned
+ * `getRequest` - Returns the Logout Request deflated, base64encoded, unsigned
  * `getID` - Returns the ID of the Logout Request. (If you have the object you can access to the id attribute)
  * `getNameIdData` - Gets the NameID Data of the the Logout Request.
  * `getNameId` - Gets the NameID of the Logout Request.
@@ -1485,7 +1486,7 @@ A class that contains functionality related to the metadata of the SP
 
 * `builder` - Generates the metadata of the SP based on the settings.
 * `signmetadata` - Signs the metadata with the key/cert provided
-* `addX509KeyDescriptors` - Adds the x509 descriptors (sign/encriptation) to
+* `addX509KeyDescriptors` - Adds the x509 descriptors (sign/encryption) to
   the metadata
 
 ##### OneLogin_Saml2_Utils - `Utils.php` #####

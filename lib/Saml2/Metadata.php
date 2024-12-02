@@ -21,10 +21,11 @@ class OneLogin_Saml2_Metadata
      * @param array         $contacts      Contacts info
      * @param array         $organization  Organization ingo
      * @param array         $attributes
+     * @param bool          $ignoreValidUntil exclude the validUntil tag from metadata
      *
      * @return string SAML Metadata XML
      */
-    public static function builder($sp, $authnsign = false, $wsign = false, $validUntil = null, $cacheDuration = null, $contacts = array(), $organization = array(), $attributes = array())
+    public static function builder($sp, $authnsign = false, $wsign = false, $validUntil = null, $cacheDuration = null, $contacts = array(), $organization = array(), $attributes = array(), $ignoreValidUntil = false)
     {
 
         if (!isset($validUntil)) {
@@ -168,11 +169,23 @@ ATTRIBUTEVALUE;
 
             $requestedAttributeStr = implode(PHP_EOL, $requestedAttributeData);
             $strAttributeConsumingService = <<<METADATA_TEMPLATE
-<md:AttributeConsumingService index="1">
+
+        <md:AttributeConsumingService index="1">
             <md:ServiceName xml:lang="en">{$sp['attributeConsumingService']['serviceName']}</md:ServiceName>
 {$attrCsDesc}{$requestedAttributeStr}
         </md:AttributeConsumingService>
 METADATA_TEMPLATE;
+        }
+
+        if ($ignoreValidUntil) {
+            $timeStr = <<<TIME_TEMPLATE
+cacheDuration="PT{$cacheDuration}S";
+TIME_TEMPLATE;
+        } else {
+            $timeStr = <<<TIME_TEMPLATE
+validUntil="{$validUntilTime}"
+                     cacheDuration="PT{$cacheDuration}S"
+TIME_TEMPLATE;
         }
 
         $spEntityId = htmlspecialchars($sp['entityId'], ENT_QUOTES);
@@ -184,8 +197,7 @@ METADATA_TEMPLATE;
                      xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute"
                      xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
                      xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
-                     validUntil="{$validUntilTime}"
-                     cacheDuration="PT{$cacheDuration}S"
+                    {$timeStr}
                      entityID="{$spEntityId}">
         {$SPextensions}
     <md:SPSSODescriptor AuthnRequestsSigned="{$strAuthnsign}" WantAssertionsSigned="{$strWsign}" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
@@ -196,11 +208,8 @@ METADATA_TEMPLATE;
         <md:NameIDFormat>{$sp['NameIDFormat']}</md:NameIDFormat>
         <md:AssertionConsumerService Binding="{$sp['assertionConsumerService']['binding']}"
                                      Location="{$acsUrl}"
-                                     index="1" />
-        {$strAttributeConsumingService}
-    </md:SPSSODescriptor>
-    {$strOrganization}
-    {$strContacts}
+                                     index="1" />{$strAttributeConsumingService}
+    </md:SPSSODescriptor>{$strOrganization}{$strContacts}
 </md:EntityDescriptor>
 METADATA_TEMPLATE;
         return $metadata;

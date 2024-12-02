@@ -43,8 +43,12 @@ class OneLogin_Saml2_UtilsTest extends PHPUnit_Framework_TestCase
         $dom = new DOMDocument();
 
         $metadataUnloaded = '<xml><EntityDescriptor>';
-        $res1 = OneLogin_Saml2_Utils::loadXML($dom, $metadataUnloaded);
-        $this->assertFalse($res1);
+        try {
+            $res1 = OneLogin_Saml2_Utils::loadXML($dom, $metadataUnloaded);
+            $this->assertFalse($res1);
+        } catch (\Exception $e) {
+          $this->assertEquals('DOMDocument::loadXML(): Premature end of data in tag EntityDescriptor line 1 in Entity, line: 1', $e->getMessage());
+        }
 
         $metadataInvalid = file_get_contents(TEST_ROOT .'/data/metadata/noentity_metadata_settings1.xml');
         $res2 = OneLogin_Saml2_Utils::loadXML($dom, $metadataInvalid);
@@ -202,6 +206,11 @@ class OneLogin_Saml2_UtilsTest extends PHPUnit_Framework_TestCase
         $this->assertNotContains('-----END CERTIFICATE-----', $formatedCert6);
         $this->assertEquals(strlen($cert2), 860);
 
+        $cert = file_get_contents(TEST_ROOT.'/certs/with.comment.crt');
+        $formatedCert7 = OneLogin_Saml2_Utils::formatCert($cert, true);
+        $this->assertContains('-----BEGIN CERTIFICATE-----', $formatedCert7);
+        $this->assertContains('-----END CERTIFICATE-----', $formatedCert7);
+        $this->assertNotContains('comments', $formatedCert7);
     }
 
     /**
@@ -439,6 +448,9 @@ class OneLogin_Saml2_UtilsTest extends PHPUnit_Framework_TestCase
     {
         $this->assertNull(OneLogin_Saml2_Utils::getBaseURLPath());
 
+        OneLogin_Saml2_Utils::setBaseURLPath('/');
+        $this->assertEquals('/', OneLogin_Saml2_Utils::getBaseURLPath());
+
         OneLogin_Saml2_Utils::setBaseURLPath('sp');
         $this->assertEquals('/sp/', OneLogin_Saml2_Utils::getBaseURLPath());
 
@@ -450,6 +462,25 @@ class OneLogin_Saml2_UtilsTest extends PHPUnit_Framework_TestCase
 
         OneLogin_Saml2_Utils::setBaseURLPath('/sp/');
         $this->assertEquals('/sp/', OneLogin_Saml2_Utils::getBaseURLPath());
+    }
+
+    /**
+     * @covers OneLogin_Saml2_Utils::setBaseURLPath
+     */
+    public function testSetBaseURLPath2()
+    {
+        $_SERVER['HTTP_HOST'] = 'sp.example.com';
+        $_SERVER['HTTPS'] = 'https';
+        $_SERVER['REQUEST_URI'] = null;
+        $_SERVER['QUERY_STRING'] = null;
+        $_SERVER['SCRIPT_NAME'] = '/';
+        unset($_SERVER['PATH_INFO']);
+
+        OneLogin_Saml2_Utils::setBaseURLPath('/');
+        $this->assertEquals("https://sp.example.com/", OneLogin_Saml2_Utils::getSelfURLNoQuery());
+        $this->assertEquals("https://sp.example.com/", OneLogin_Saml2_Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals("https://sp.example.com/", OneLogin_Saml2_Utils::getSelfURL());
+        $this->assertEquals('/', OneLogin_Saml2_Utils::getBaseURLPath());
     }
 
     /**
@@ -479,9 +510,9 @@ class OneLogin_Saml2_UtilsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedUrl, OneLogin_Saml2_Utils::getSelfURL());
 
         OneLogin_Saml2_Utils::setBaseURL("http://anothersp.example.com:81/example2/");
-        $expectedUrlNQ2 = 'http://anothersp.example.com:81/example2/route.php';
-        $expectedRoutedUrlNQ2 = 'http://anothersp.example.com:81/example2/route.php';
-        $expectedUrl2 = 'http://anothersp.example.com:81/example2/route.php?x=test';
+        $expectedUrlNQ2 = 'http://anothersp.example.com:81/example2/example1/route.php';
+        $expectedRoutedUrlNQ2 = 'http://anothersp.example.com:81/example2/example1/route.php';
+        $expectedUrl2 = 'http://anothersp.example.com:81/example2/example1/route.php?x=test';
 
         $this->assertEquals('http', OneLogin_Saml2_Utils::getSelfProtocol());
         $this->assertEquals('anothersp.example.com', OneLogin_Saml2_Utils::getSelfHost());
@@ -493,11 +524,27 @@ class OneLogin_Saml2_UtilsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedUrl2, OneLogin_Saml2_Utils::getSelfURL());
 
         $_SERVER['PATH_INFO'] = '/test';
-        $expectedUrlNQ2 = 'http://anothersp.example.com:81/example2/route.php/test';
+        $expectedUrlNQ2 = 'http://anothersp.example.com:81/example2/example1/route.php/test';
 
         $this->assertEquals($expectedUrlNQ2, OneLogin_Saml2_Utils::getSelfURLNoQuery());
         $this->assertEquals($expectedRoutedUrlNQ2, OneLogin_Saml2_Utils::getSelfRoutedURLNoQuery());
         $this->assertEquals($expectedUrl2, OneLogin_Saml2_Utils::getSelfURL());
+
+        OneLogin_Saml2_Utils::setBaseURL("http://anothersp.example.com:81/example2");
+        $this->assertEquals($expectedUrlNQ2, OneLogin_Saml2_Utils::getSelfURLNoQuery());
+        $this->assertEquals($expectedRoutedUrlNQ2, OneLogin_Saml2_Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals($expectedUrl2, OneLogin_Saml2_Utils::getSelfURL());
+        $this->assertEquals('/example2/', OneLogin_Saml2_Utils::getBaseURLPath());
+
+        $_SERVER['PATH_INFO'] = null;
+        $_SERVER['REQUEST_URI'] = null;
+        $_SERVER['QUERY_STRING'] = null;
+        $_SERVER['SCRIPT_NAME'] = '/';
+        OneLogin_Saml2_Utils::setBaseURL("https://sp.example.com/");
+        $this->assertEquals("https://sp.example.com/", OneLogin_Saml2_Utils::getSelfURLNoQuery());
+        $this->assertEquals("https://sp.example.com/", OneLogin_Saml2_Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals("https://sp.example.com/", OneLogin_Saml2_Utils::getSelfURL());
+        $this->assertEquals('/', OneLogin_Saml2_Utils::getBaseURLPath());
     }
 
     /**
@@ -557,6 +604,13 @@ class OneLogin_Saml2_UtilsTest extends PHPUnit_Framework_TestCase
 
         $_SERVER['REQUEST_URI'] = 'https://example.com/testing';
         $this->assertEquals($url.'/testing', OneLogin_Saml2_Utils::getSelfURL());
+
+        $_SERVER['REQUEST_URI'] = 'https://example.com/test/';
+        $this->assertEquals($url.'/test/', OneLogin_Saml2_Utils::getSelfURL());
+
+        $_SERVER['REQUEST_URI'] = 'https://example.com/';
+        $this->assertEquals($url.'/', OneLogin_Saml2_Utils::getSelfURL());
+
     }
 
     /**
@@ -696,7 +750,7 @@ class OneLogin_Saml2_UtilsTest extends PHPUnit_Framework_TestCase
             $this->assertContains('Invalid SAML2 timestamp passed', $e->getMessage());
         }
 
-        // Now test if toolkit supports miliseconds
+        // Now test if toolkit supports milliseconds
         $SAMLTime2 = '2013-12-10T04:39:31.120Z';
         $this->assertEquals($time, OneLogin_Saml2_Utils::parseSAML2Time($SAMLTime2));
     }

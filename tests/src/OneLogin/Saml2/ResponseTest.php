@@ -122,7 +122,7 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
         $xml3 = file_get_contents(TEST_ROOT . '/data/responses/valid_encrypted_assertion.xml.base64');
         $response3 = new OneLogin_Saml2_Response($this->_settings, $xml3);
         $this->assertEquals('_68392312d490db6d355555cfbbd8ec95d746516f60', $response3->getNameId());
-        
+
         $xml4 = file_get_contents(TEST_ROOT . '/data/responses/invalids/no_nameid.xml.base64');
         $response4 = new OneLogin_Saml2_Response($this->_settings, $xml4);
 
@@ -211,7 +211,7 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
         $xml2 = file_get_contents(TEST_ROOT . '/data/responses/response_encrypted_nameid.xml.base64');
         $response2 = new OneLogin_Saml2_Response($this->_settings, $xml2);
         $this->assertEquals('urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified', $response2->getNameIdFormat());
-    
+
         $xml3 = file_get_contents(TEST_ROOT . '/data/responses/valid_encrypted_assertion.xml.base64');
         $response3 = new OneLogin_Saml2_Response($this->_settings, $xml3);
         $this->assertEquals('urn:oasis:names:tc:SAML:2.0:nameid-format:transient', $response3->getNameIdFormat());
@@ -405,6 +405,71 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
         } catch (OneLogin_Saml2_ValidationError $e) {
             $this->assertContains('An empty NameID value found', $e->getMessage());
         }
+
+        $xml7 = file_get_contents(TEST_ROOT . '/data/responses/invalids/no_value_nameid.xml.base64');
+        $response11 = new OneLogin_Saml2_Response($this->_settings, $xml7);
+        $nameIdData12 = $response11->getNameIdData();
+        $expectedNameIdData10 = array(
+            'Value' => "",
+            'Format' => "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+        );
+        $this->assertEquals($expectedNameIdData10, $nameIdData12);
+
+        $settingsDir = TEST_ROOT .'/settings/';
+        include $settingsDir.'settings1.php';
+
+        $settingsInfo['strict'] = true;
+        $settingsInfo['security']['wantNameId'] = true;
+
+        $settings = new OneLogin_Saml2_Settings($settingsInfo);
+        $response12 = new OneLogin_Saml2_Response($settings, $xml7);
+
+        try {
+            $nameIdData13 = $response12->getNameIdData();
+            $this->fail('OneLogin_Saml2_ValidationError was not raised');
+        } catch (OneLogin_Saml2_ValidationError $e) {
+            $this->assertContains('An empty NameID value found', $e->getMessage());
+        }
+
+        $settingsInfo['security']['wantNameId'] = false;
+
+        $settings = new OneLogin_Saml2_Settings($settingsInfo);
+        $response13 = new OneLogin_Saml2_Response($settings, $xml7);
+
+        $nameIdData14 = $response13->getNameIdData();
+
+        $expectedNameIdData11 = array(
+            'Value' => "",
+            'Format' => "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+        );
+        $this->assertEquals($expectedNameIdData11, $nameIdData14);
+
+        $settingsInfo['strict'] = false;
+        $settingsInfo['security']['wantNameId'] = true;
+
+        $settings = new OneLogin_Saml2_Settings($settingsInfo);
+        $response14 = new OneLogin_Saml2_Response($settings, $xml7);
+
+        $nameIdData15 = $response14->getNameIdData();
+
+        $expectedNameIdData12 = array(
+            'Value' => "",
+            'Format' => "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+        );
+        $this->assertEquals($expectedNameIdData12, $nameIdData15);
+
+        $settingsInfo['security']['wantNameId'] = false;
+
+        $settings = new OneLogin_Saml2_Settings($settingsInfo);
+        $response15 = new OneLogin_Saml2_Response($settings, $xml7);
+
+        $nameIdData16 = $response15->getNameIdData();
+
+        $expectedNameIdData13 = array(
+            'Value' => "",
+            'Format' => "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+        );
+        $this->assertEquals($expectedNameIdData13, $nameIdData16);
     }
 
     /**
@@ -453,7 +518,7 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
 
         $xmlEnc = file_get_contents(TEST_ROOT . '/data/responses/valid_encrypted_assertion.xml.base64');
         $responseEnc = new OneLogin_Saml2_Response($this->_settings, $xmlEnc);
-        
+
         $response->checkStatus();
 
         $xml2 = file_get_contents(TEST_ROOT . '/data/responses/invalids/status_code_responder.xml.base64');
@@ -746,11 +811,14 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
         $settings = new OneLogin_Saml2_Settings($settingsInfo);
 
         $xml = file_get_contents(TEST_ROOT . '/data/responses/wrapped_response_3.xml.base64');
-        $response = new OneLogin_Saml2_Response($settings, $xml);
-
-        $valid = $response->isValid();
-
-        $this->assertFalse($valid);
+        try {
+            $response = new OneLogin_Saml2_Response($settings, $xml);
+            $valid = $response->isValid();
+            $this->assertFalse($valid);
+            $this->assertEquals('Found an invalid Signed Element. SAML Response rejected', $response->getError());
+        } catch (Exception $e) {
+            $this->assertEquals('DOMDocument::loadXML(): Namespace prefix saml on Assertion is not defined in Entity, line: 1', $e->getMessage());
+        }
     }
 
     /**
@@ -784,7 +852,7 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
         $response = new OneLogin_Saml2_Response($this->_settings, $xml);
 
         $this->assertEquals(1290203857, $response->getSessionNotOnOrAfter());
-        
+
         // An assertion that do not specified Session timeout should return NULL
         $xml2 = file_get_contents(TEST_ROOT . '/data/responses/response2.xml.base64');
         $response2 = new OneLogin_Saml2_Response($this->_settings, $xml2);
@@ -1049,7 +1117,7 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
         $response4 = new OneLogin_Saml2_Response($settings, $xml2);
         $this->assertTrue($response4->isValid());
 
-        // Destination strict match 
+        // Destination strict match
         $xml3 = file_get_contents(TEST_ROOT . '/data/responses/invalids/invalid_strict_destination.xml.base64');
         $response5 = new OneLogin_Saml2_Response($settings, $xml3);
         $this->assertTrue($response5->isValid());
@@ -1254,7 +1322,7 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
     }
 
 /**
-    * Somtimes IdPs uses datetimes with miliseconds, this
+    * Sometimes IdPs uses datetimes with milliseconds, this
     * test is to verify that the toolkit supports them
     * @covers OneLogin_Saml2_Response::isValid
     */
@@ -1304,7 +1372,7 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
         $response2 = new OneLogin_Saml2_Response($this->_settings, $message);
         $response2->isValid($requestId);
         $this->assertContains('The InResponseTo of the Response', $response2->getError());
-        
+
         $validRequestId = '_57bcbf70-7b1f-012e-c821-782bcb13bb38';
         $response2->isValid($validRequestId);
         $this->assertContains('No Signature found. SAML Response rejected', $response2->getError());
@@ -1369,7 +1437,7 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
 
         $response->isValid();
         $this->assertContains('No Signature found. SAML Response rejected', $response->getError());
-        
+
         $response->isValid($inResponseTo);
         $this->assertEquals('No InResponseTo at the Response, but it was provided the requestId related to the AuthNRequest sent by the SP: '.$inResponseTo, $response->getError());
     }
@@ -1483,7 +1551,7 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse($response3->isValid());
         $this->assertEquals('The assertion of the Response is not encrypted and the SP requires it', $response3->getError());
-        
+
         $settingsInfo['security']['wantAssertionsEncrypted'] = false;
         $settingsInfo['security']['wantNameIdEncrypted'] = true;
         $settingsInfo['strict'] = false;
@@ -1679,7 +1747,7 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
         $xml = file_get_contents(TEST_ROOT . '/data/responses/signed_message_response.xml.base64');
         $response = new OneLogin_Saml2_Response($this->_settings, $xml);
         $this->assertTrue($response->isValid());
-        
+
         $xml2 = file_get_contents(TEST_ROOT . '/data/responses/signed_assertion_response.xml.base64');
         $response2 = new OneLogin_Saml2_Response($this->_settings, $xml2);
         $this->assertTrue($response2->isValid());
@@ -1738,11 +1806,19 @@ class OneLogin_Saml2_ResponseTest extends PHPUnit_Framework_TestCase
     {
         $settingsDir = TEST_ROOT .'/settings/';
         include $settingsDir.'settings6.php';
-        
+
         $settings = new OneLogin_Saml2_Settings($settingsInfo);
 
         $xml = file_get_contents(TEST_ROOT . '/data/responses/signed_message_response.xml.base64');
         $response = new OneLogin_Saml2_Response($settings, $xml);
         $this->assertTrue($response->isValid());
+    }
+
+    public function testCanGetEncryptedNameIdInEncryptedAssertion()
+    {
+        $xml = file_get_contents(TEST_ROOT . '/data/responses/response_encrypted_nameid_encrypted_assertion2.xml.base64');
+        $response = new OneLogin_Saml2_Response($this->_settings, $xml);
+        $this->assertTrue($response->isValid());
+        $this->assertEquals('492882615acf31c8096b627245d76ae53036c090', $response->getNameId());
     }
 }
